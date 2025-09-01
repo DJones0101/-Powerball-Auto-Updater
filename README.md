@@ -1,1 +1,0 @@
-# -Powerball-Auto-Updater
