@@ -41,7 +41,7 @@ jobs:
 
       - name: Run updater
         # Adjust this if your script lives in a subfolder
-        run: python powerball_updater.py
+        run: python powerball_updater.py --csv "Lottery_Powerball_Winning_Numbers__Beginning_2010 (2).csv"
 
       # OPTIONAL: commit updated CSV/JSON/etc. back to the repo
       - name: Commit & push changes (if any)
