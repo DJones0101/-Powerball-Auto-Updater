@@ -1,22 +1,17 @@
 name: Powerball Auto Updater
 
 on:
-  # Runs at 6:00 AM Los Angeles time year-round.
-  # During Daylight Time (PDT) LA=UTC-7 → 13:00 UTC
-  # During Standard Time (PST)  LA=UTC-8 → 14:00 UTC
   schedule:
-    - cron: "0 13 * * *"   # 06:00 PT when LA is on PDT
-    - cron: "0 14 * * *"   # 06:00 PT when LA is on PST
-  # Allow manual runs from the Actions tab
+    - cron: "0 13 * * *"   # 06:00 Los Angeles during PDT
+    - cron: "0 14 * * *"   # 06:00 Los Angeles during PST
   workflow_dispatch: {}
 
 permissions:
-  contents: write  # needed if we push changes back
+  contents: write
 
 jobs:
   update:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -40,22 +35,17 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Run updater
-        # Adjust this if your script lives in a subfolder
-        run: python powerball_updater.py --csv "Lottery_Powerball_Winning_Numbers__Beginning_2010 (2).csv"
+        run: python .github/workflows/powerball_updater.py --csv data/powerball.csv
 
-      # OPTIONAL: commit updated CSV/JSON/etc. back to the repo
+      # NEW: sort your CSVs by date after the updater runs
+      - name: Sort data by date
+        run: python .github/workflows/sort_powerball.py
+
       - name: Commit & push changes (if any)
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: update Powerball data [skip ci]"
+          commit_message: "chore: update & sort Powerball data [skip ci]"
           commit_user_name: "github-actions[bot]"
           commit_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
-          # Limit commits to a folder pattern if you want (uncomment next line):
+          # Optional: only commit data folder
           # file_pattern: "data/**"
-
-      # OPTIONAL: publish run outputs as an artifact for easy download from the run page
-      # - name: Upload data artifact
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: powerball-data
-      #     path: data/**

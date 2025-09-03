@@ -7,7 +7,7 @@ Powerball CSV updater
 - Keeps columns: Draw Date, Winning Numbers, Multiplier
 
 Usage:
-    python powerball_updater.py --csv "Lottery_Powerball_Winning_Numbers__Beginning_2010 (2).csv"
+    python powerball_updater.py --csv "powerball.csv"
 """
 
 import argparse, sys, os, datetime as dt
